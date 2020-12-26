@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_people"
+        android:name="com.simplx.apps.chatapp2.ui.parent.ui.home.PeopleFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_people" />
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.simplx.apps.chatapp2.ui.parent.ui.account.MyAccountFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_my_account" />
+
+
+</navigation>
