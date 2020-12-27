@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">ChatApp2</string>
-    <string name="title_activity_home">MainActivity</string>
-    <string name="title_home">People</string>
-    <string name="title_dashboard">My Account</string>
-    <string name="title_activity_parent">MainActivity</string>
-</resources>
