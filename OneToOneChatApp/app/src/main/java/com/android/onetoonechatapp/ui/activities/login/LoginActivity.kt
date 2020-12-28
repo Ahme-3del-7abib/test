@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.android.onetoonechatapp.R
-import com.android.onetoonechatapp.ui.activities.main.MainActivity
 import com.android.onetoonechatapp.ui.fragments.LoginFragment
 
 

@@ -1,29 +1,38 @@
 package com.android.onetoonechatapp.utils
 
 import android.view.View
-import android.widget.AdapterView
+import android.view.View.OnLongClickListener
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.android.onetoonechatapp.R
 
 
 class ItemClickSupport {
 
     private var mRecyclerView: RecyclerView? = null
-    private var mOnItemClickListener: AdapterView.OnItemClickListener? = null
+    private var mOnItemClickListener: OnItemClickListener? = null
     private var mOnItemLongClickListener: OnItemLongClickListener? = null
 
-    /*
-    private val mOnClickListener: View.OnClickListener =
+
+    private val mOnClickListener =
         View.OnClickListener { v ->
             if (mOnItemClickListener != null) {
-                val holder = v?.let { mRecyclerView!!.getChildViewHolder(it) }
-                holder?.adapterPosition?.let {
-                    mOnItemClickListener.onItemClicked(
-                        mRecyclerView,
-                        it, v
-                    )
-                }
+                val holder = mRecyclerView!!.getChildViewHolder(v)
+                mOnItemClickListener?.onItemClicked(mRecyclerView, holder.adapterPosition, v)
             }
+        }
+
+    private val mOnLongClickListener =
+        OnLongClickListener { v ->
+            if (mOnItemLongClickListener != null) {
+                val holder = mRecyclerView!!.getChildViewHolder(v)
+                return@OnLongClickListener mOnItemLongClickListener!!.onItemLongClicked(
+                    mRecyclerView,
+                    holder.adapterPosition,
+                    v
+                )
+            }
+            false
         }
 
     private val mAttachListener: OnChildAttachStateChangeListener =
@@ -33,33 +42,44 @@ class ItemClickSupport {
                     view.setOnClickListener(mOnClickListener)
                 }
                 if (mOnItemLongClickListener != null) {
-                    view.setOnLongClickListener(mOnItemClickListener)
+                    view.setOnLongClickListener(mOnLongClickListener)
                 }
             }
 
-            override fun onChildViewDetachedFromWindow(view: View) {}
+            override fun onChildViewDetachedFromWindow(view: View) {
+
+            }
         }
 
-     */
-    private fun ItemClickSupport(recyclerView: RecyclerView): ItemClickSupport {
+    companion object {
+
+        fun addTo(view: RecyclerView?): ItemClickSupport {
+            return view?.getTag(R.id.item_click_support) as ItemClickSupport
+        }
+
+        fun removeFrom(view: RecyclerView): ItemClickSupport {
+            val support = view.getTag(R.id.item_click_support) as ItemClickSupport
+            support.detach(view)
+            return support
+        }
+    }
+
+    private fun detach(view: RecyclerView) {
+        view.removeOnChildAttachStateChangeListener(mAttachListener)
+        view.setTag(R.id.item_click_support, null)
+    }
+
+
+    fun ItemClickSupport(recyclerView: RecyclerView): ItemClickSupport {
         mRecyclerView = recyclerView
         mRecyclerView?.setTag(R.id.item_click_support, this)
-        // mRecyclerView?.addOnChildAttachStateChangeListener(mAttachListener)
+        mRecyclerView?.addOnChildAttachStateChangeListener(mAttachListener)
 
         return ItemClickSupport()
     }
 
-    fun addTo(view: RecyclerView): ItemClickSupport? {
-        return view.getTag(R.id.item_click_support) as ItemClickSupport
-    }
 
-    fun removeFrom(view: RecyclerView): ItemClickSupport? {
-        val support = view.getTag(R.id.item_click_support) as ItemClickSupport
-        support.detach(view)
-        return support
-    }
-
-    fun setOnItemClickListener(listener: AdapterView.OnItemClickListener): ItemClickSupport? {
+    fun setOnItemClickListener(listener: OnItemClickListener): ItemClickSupport {
         mOnItemClickListener = listener
         return this
     }
@@ -69,9 +89,8 @@ class ItemClickSupport {
         return this
     }
 
-    private fun detach(view: RecyclerView) {
-        //  view.removeOnChildAttachStateChangeListener(mAttachListener)
-        view.setTag(R.id.item_click_support, null)
+    interface OnItemClickListener {
+        fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?)
     }
 
     interface OnItemLongClickListener {

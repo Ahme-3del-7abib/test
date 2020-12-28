@@ -26,7 +26,7 @@ class SharedPrefUtil(private val mContext: Context) {
     }
 
     fun saveBoolean(key: String?, value: Boolean) {
-        mSharedPreferences = mContext?.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
+        mSharedPreferences = mContext.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
         mEditor = mSharedPreferences!!.edit()
         mEditor?.putBoolean(key, value)
         mEditor?.apply()

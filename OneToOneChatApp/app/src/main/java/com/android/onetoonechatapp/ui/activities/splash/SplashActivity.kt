@@ -4,13 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import com.android.onetoonechatapp.R
 import com.android.onetoonechatapp.ui.activities.login.LoginActivity
-import com.android.onetoonechatapp.ui.activities.user_listing.UserListingActivity
+import com.android.onetoonechatapp.ui.activities.users.UserListActivity
 
 import com.google.firebase.auth.FirebaseAuth
-
 
 class SplashActivity : AppCompatActivity() {
 
@@ -25,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
         mHandler = Handler()
         mRunnable = Runnable {
             if (FirebaseAuth.getInstance().currentUser != null) {
-                startActivity(Intent(this, UserListingActivity::class.java))
+                startActivity(Intent(this, UserListActivity::class.java))
             } else {
                 startActivity(Intent(this, LoginActivity::class.java))
             }

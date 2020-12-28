@@ -7,7 +7,6 @@ class FirebaseChatMainApp : Application() {
     companion object {
         private var sIsChatActivityOpen = false
 
-
         fun isChatActivityOpen(): Boolean {
             return sIsChatActivityOpen
         }
@@ -15,7 +14,6 @@ class FirebaseChatMainApp : Application() {
         fun setChatActivityOpen(isChatActivityOpen: Boolean) {
             sIsChatActivityOpen = isChatActivityOpen
         }
-
     }
 
     override fun onCreate() {

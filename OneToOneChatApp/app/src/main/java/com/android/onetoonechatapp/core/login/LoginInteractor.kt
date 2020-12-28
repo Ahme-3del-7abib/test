@@ -23,7 +23,7 @@ class LoginInteractor(private val mOnLoginListener: OnLoginListener) : LoginCont
                     task.result?.user?.uid?.let {
                         updateFirebaseToken(
                             it,
-                            SharedPrefUtil(activity!!.applicationContext).getString(
+                            SharedPrefUtil(activity.applicationContext).getString(
                                 Constants.ARG_FIREBASE_TOKEN,
                                 null
                             )

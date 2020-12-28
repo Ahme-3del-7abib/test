@@ -14,6 +14,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
 
@@ -87,7 +88,7 @@ class FcmNotificationBuilder() {
 
         var requestBody: RequestBody? = null
         try {
-            requestBody = RequestBody.create(MEDIA_TYPE_JSON, getValidJsonBody().toString())
+            requestBody = getValidJsonBody().toString().toRequestBody(MEDIA_TYPE_JSON)
         } catch (e: JSONException) {
             e.printStackTrace()
         }

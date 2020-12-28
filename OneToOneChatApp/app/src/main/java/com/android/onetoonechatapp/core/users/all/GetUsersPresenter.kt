@@ -4,8 +4,9 @@ import com.android.onetoonechatapp.models.User
 
 class GetUsersPresenter(
     private val mView: GetUsersContract.View,
-    private val mGetUsersInteractor: GetUsersInteractor
 ) : GetUsersContract.Presenter, GetUsersContract.OnGetAllUsersListener {
+
+    private val mGetUsersInteractor: GetUsersInteractor = GetUsersInteractor(this)
 
     override fun getAllUsers() {
         mGetUsersInteractor.getAllUsersFromFirebase()
