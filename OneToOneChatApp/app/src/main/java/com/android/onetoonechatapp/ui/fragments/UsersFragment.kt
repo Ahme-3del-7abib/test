@@ -1,5 +1,6 @@
 package com.android.onetoonechatapp.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -13,11 +14,11 @@ import com.android.onetoonechatapp.R
 import com.android.onetoonechatapp.core.users.all.GetUsersContract
 import com.android.onetoonechatapp.core.users.all.GetUsersPresenter
 import com.android.onetoonechatapp.models.User
+import com.android.onetoonechatapp.ui.activities.chat.ChatActivity
 import com.android.onetoonechatapp.ui.activities.users.UserListingRecyclerAdapter
-import com.android.onetoonechatapp.utils.ItemClickSupport
 
-
-class UsersFragment : Fragment(), GetUsersContract.View, ItemClickSupport.OnItemClickListener,
+class UsersFragment : Fragment(), GetUsersContract.View,
+    UserListingRecyclerAdapter.OnNewUserClickListener,
     SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
@@ -38,6 +39,7 @@ class UsersFragment : Fragment(), GetUsersContract.View, ItemClickSupport.OnItem
     private var mSwipeRefreshLayout: SwipeRefreshLayout? = null
     private var mRecyclerViewAllUserListing: RecyclerView? = null
     private var mUserListingRecyclerAdapter: UserListingRecyclerAdapter? = null
+
     private var mGetUsersPresenter: GetUsersPresenter? = null
 
     override fun onCreateView(
@@ -55,7 +57,6 @@ class UsersFragment : Fragment(), GetUsersContract.View, ItemClickSupport.OnItem
         mRecyclerViewAllUserListing = view.findViewById(R.id.recycler_view_all_user_listing)
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
@@ -63,13 +64,12 @@ class UsersFragment : Fragment(), GetUsersContract.View, ItemClickSupport.OnItem
 
     private fun init() {
         mGetUsersPresenter = GetUsersPresenter(this)
-
         getUsers()
 
-        mSwipeRefreshLayout?.post { mSwipeRefreshLayout!!.isRefreshing = true }
+        mSwipeRefreshLayout?.post { mSwipeRefreshLayout?.isRefreshing = true }
+        mSwipeRefreshLayout?.setOnRefreshListener(this)
+        mUserListingRecyclerAdapter = UserListingRecyclerAdapter(this)
 
-        ItemClickSupport.addTo(mRecyclerViewAllUserListing).setOnItemClickListener(this)
-        mSwipeRefreshLayout!!.setOnRefreshListener(this)
     }
 
     override fun onRefresh() {
@@ -77,28 +77,34 @@ class UsersFragment : Fragment(), GetUsersContract.View, ItemClickSupport.OnItem
     }
 
     private fun getUsers() {
-        if (TextUtils.equals(arguments!!.getString(ARG_TYPE), TYPE_CHATS)) {
-        } else if (TextUtils.equals(
-                arguments!!.getString(ARG_TYPE), TYPE_ALL
+        if (TextUtils.equals(
+                requireArguments().getString(ARG_TYPE), TYPE_ALL
             )
         ) {
             mGetUsersPresenter?.getAllUsers()
         }
     }
 
-    override fun onGetAllUsersSuccess(users: List<User?>?) {
-        mSwipeRefreshLayout!!.post { mSwipeRefreshLayout!!.isRefreshing = false }
-        mUserListingRecyclerAdapter = users?.let { UserListingRecyclerAdapter(it) }
-        mRecyclerViewAllUserListing!!.adapter = mUserListingRecyclerAdapter
-        mUserListingRecyclerAdapter?.notifyDataSetChanged()
+    override fun onNewUserClick(position: Int) {
+        ChatActivity.startActivity(
+            requireContext(), mUserListingRecyclerAdapter?.getUser(position)?.email,
+            mUserListingRecyclerAdapter?.getUser(position)?.uid,
+            mUserListingRecyclerAdapter?.getUser(position)?.firebaseToken
+        )
+    }
+
+    override fun onGetAllUsersSuccess(users: ArrayList<User?>?) {
+        mSwipeRefreshLayout?.post { mSwipeRefreshLayout?.isRefreshing = false }
+        mRecyclerViewAllUserListing?.adapter = mUserListingRecyclerAdapter
+        mUserListingRecyclerAdapter?.setList(users)
     }
 
     override fun onGetAllUsersFailure(message: String?) {
-        mSwipeRefreshLayout!!.post { mSwipeRefreshLayout!!.isRefreshing = false }
+        mSwipeRefreshLayout?.post { mSwipeRefreshLayout?.isRefreshing = false }
         Toast.makeText(activity, "Error: $message", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onGetChatUsersSuccess(users: List<User?>?) {
+    override fun onGetChatUsersSuccess(users: ArrayList<User?>?) {
         TODO("Not yet implemented")
     }
 
@@ -106,8 +112,5 @@ class UsersFragment : Fragment(), GetUsersContract.View, ItemClickSupport.OnItem
         TODO("Not yet implemented")
     }
 
-    override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
-        TODO("Not yet implemented")
-    }
 
 }

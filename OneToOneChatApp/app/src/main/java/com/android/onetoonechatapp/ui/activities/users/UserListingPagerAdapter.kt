@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.android.onetoonechatapp.ui.fragments.UsersFragment
 
-@Suppress("DEPRECATION")
 class UserListingPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     companion object {

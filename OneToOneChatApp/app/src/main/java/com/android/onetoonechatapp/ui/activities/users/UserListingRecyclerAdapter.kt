@@ -8,43 +8,53 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.onetoonechatapp.R
 import com.android.onetoonechatapp.models.User
 
-class UserListingRecyclerAdapter(users: List<User?>?) :
+class UserListingRecyclerAdapter(private val onUserClickListener: OnNewUserClickListener) :
     RecyclerView.Adapter<UserListingRecyclerAdapter.ViewHolder>() {
 
-    private val mUsers: ArrayList<User> = ArrayList()
+    private var mUsers: ArrayList<User?>? = ArrayList()
 
-    fun add(user: User) {
-        mUsers.add(user)
-        notifyItemInserted(mUsers.size - 1)
+    fun setList(l: ArrayList<User?>?) {
+        this.mUsers = l
+        notifyDataSetChanged()
     }
 
+    fun add(user: User) {
+        mUsers?.add(user)
+        mUsers?.size?.minus(1).let {
+            if (it != null) {
+                notifyItemInserted(it)
+            }
+        }
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_all_user_listing, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, onUserClickListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (_, email) = mUsers[position]
-
+        val email = mUsers?.get(position)?.email
         if (email != null) {
             val alphabet = email.substring(0, 1)
             holder.txtUsername?.text = email
             holder.txtUserAlphabet?.text = alphabet
-
         }
     }
 
     override fun getItemCount(): Int {
-        return mUsers.size
+        return mUsers?.size!!
     }
 
-    fun getUser(position: Int): User {
-        return mUsers[position]
+    fun getUser(position: Int): User? {
+        return mUsers?.get(position)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, listener: OnNewUserClickListener) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+        private var onUserClickListener: OnNewUserClickListener? = null
 
         var txtUserAlphabet: TextView? = null
         var txtUsername: TextView? = null
@@ -52,7 +62,17 @@ class UserListingRecyclerAdapter(users: List<User?>?) :
         init {
             txtUserAlphabet = itemView.findViewById(R.id.text_view_user_alphabet)
             txtUsername = itemView.findViewById(R.id.text_view_username)
+            this.onUserClickListener = listener
+            itemView.setOnClickListener(this)
         }
+
+        override fun onClick(v: View?) {
+            onUserClickListener?.onNewUserClick(adapterPosition)
+        }
+    }
+
+    interface OnNewUserClickListener {
+        fun onNewUserClick(position: Int)
     }
 
 

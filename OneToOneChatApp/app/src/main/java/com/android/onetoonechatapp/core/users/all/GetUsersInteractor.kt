@@ -19,14 +19,14 @@ class GetUsersInteractor(private val mOnGetAllUsersListener: OnGetAllUsersListen
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val dataSnapshots: Iterator<DataSnapshot> = dataSnapshot.children.iterator()
-                    val users: MutableList<User?> = ArrayList()
+                    val users: ArrayList<User?> = ArrayList()
                     while (dataSnapshots.hasNext()) {
                         val dataSnapshotChild = dataSnapshots.next()
                         val user = dataSnapshotChild.getValue(
                             User::class.java
                         )
                         if (!TextUtils.equals(
-                                user!!.uid,
+                                user?.uid,
                                 FirebaseAuth.getInstance().currentUser!!.uid
                             )
                         ) {

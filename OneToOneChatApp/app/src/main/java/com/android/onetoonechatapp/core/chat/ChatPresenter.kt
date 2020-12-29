@@ -4,11 +4,11 @@ import android.content.Context
 import com.android.onetoonechatapp.models.Chat
 
 class ChatPresenter(
-    private val mView: ChatContract.View,
-    private val mChatInteractor: ChatInteractor
-
+    private val mView: ChatContract.View
 ) : ChatContract.Presenter, ChatContract.OnSendMessageListener, ChatContract.OnGetMessagesListener {
 
+
+    private val mChatInteractor: ChatInteractor = ChatInteractor(this, this)
 
     override fun sendMessage(context: Context?, chat: Chat?, receiverFirebaseToken: String?) {
         mChatInteractor.sendMessageToFirebaseUser(context, chat, receiverFirebaseToken)

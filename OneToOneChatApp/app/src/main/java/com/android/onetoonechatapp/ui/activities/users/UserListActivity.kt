@@ -1,5 +1,6 @@
 package com.android.onetoonechatapp.ui.activities.users
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -46,6 +47,7 @@ class UserListActivity : AppCompatActivity(), LogoutContract.View {
         bindViews()
         init()
     }
+
 
     private fun bindViews() {
         mToolbar = findViewById(R.id.toolbar)

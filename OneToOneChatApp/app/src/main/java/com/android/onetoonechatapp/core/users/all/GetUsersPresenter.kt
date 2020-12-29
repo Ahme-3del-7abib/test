@@ -16,7 +16,7 @@ class GetUsersPresenter(
         mGetUsersInteractor.getChatUsersFromFirebase()
     }
 
-    override fun onGetAllUsersSuccess(users: List<User?>?) {
+    override fun onGetAllUsersSuccess(users: ArrayList<User?>?) {
         mView.onGetAllUsersSuccess(users)
     }
 

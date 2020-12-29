@@ -13,7 +13,6 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
     private val TAG = "MyFirebaseIIDService"
 
     override fun onTokenRefresh() {
-        // Get updated InstanceID token.
         val refreshedToken = FirebaseInstanceId.getInstance().token
         Log.d(TAG, "Refreshed token: $refreshedToken")
 
@@ -23,12 +22,14 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
     private fun sendRegistrationToServer(token: String?) {
         SharedPrefUtil(applicationContext).saveString(Constants.ARG_FIREBASE_TOKEN, token)
         if (FirebaseAuth.getInstance().currentUser != null) {
-            FirebaseDatabase.getInstance()
-                .reference
-                .child(Constants.ARG_USERS)
-                .child(FirebaseAuth.getInstance().currentUser!!.uid)
-                .child(Constants.ARG_FIREBASE_TOKEN)
-                .setValue(token)
+            FirebaseAuth.getInstance().currentUser?.let {
+                FirebaseDatabase.getInstance()
+                    .reference
+                    .child(Constants.ARG_USERS)
+                    .child(it.uid)
+                    .child(Constants.ARG_FIREBASE_TOKEN)
+                    .setValue(token)
+            }
         }
     }
 }

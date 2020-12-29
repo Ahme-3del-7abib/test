@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.android.onetoonechatapp.R
 import com.android.onetoonechatapp.ui.fragments.LoginFragment
 
@@ -42,13 +42,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        val loginFragment: Fragment = LoginFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.frame_layout_content_login,
-                loginFragment,
-                LoginFragment::class.java.simpleName
-            ).commit()
+
+        val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(
+            R.id.frame_layout_content_login,
+            LoginFragment.newInstance(),
+            LoginFragment::class.java.simpleName
+        )
+        fragmentTransaction.commit()
 
     }
 }

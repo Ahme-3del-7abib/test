@@ -3,14 +3,11 @@ package com.android.onetoonechatapp.ui.activities.register
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentTransaction
 import com.android.onetoonechatapp.R
-import com.android.onetoonechatapp.ui.fragments.LoginFragment
 import com.android.onetoonechatapp.ui.fragments.RegisterFragment
-
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -33,17 +30,19 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
-        mToolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        mToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(mToolbar)
     }
 
     private fun init() {
-        val registerFragment: Fragment = RegisterFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.frame_layout_content_register,
-                registerFragment,
-                LoginFragment::class.java.simpleName
-            ).commit()
+
+        val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(
+            R.id.frame_layout_content_register,
+            RegisterFragment.newInstance(),
+            RegisterFragment::class.java.simpleName
+        )
+
+        fragmentTransaction.commit()
     }
 }

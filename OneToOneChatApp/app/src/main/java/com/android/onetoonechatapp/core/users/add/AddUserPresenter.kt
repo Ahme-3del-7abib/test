@@ -4,9 +4,10 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseUser
 
 class AddUserPresenter(
-    private val mView: AddUserContract.View,
-    private val mAddUserInteractor: AddUserInteractor
+    private val mView: AddUserContract.View
 ) : AddUserContract.Presenter, AddUserContract.OnUserDatabaseListener {
+
+    private val mAddUserInteractor: AddUserInteractor = AddUserInteractor(this)
 
     override fun addUser(context: Context?, firebaseUser: FirebaseUser?) {
         mAddUserInteractor.addUserToDatabase(context, firebaseUser)
